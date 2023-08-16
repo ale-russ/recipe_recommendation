@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>788141476838-31d81h8j6k8mj63nmqrtsst12jaau1t0.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.788141476838-31d81h8j6k8mj63nmqrtsst12jaau1t0</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>788141476838-jdbfdvt9gmdr6fdtsksh4c48fdt8h2uj.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCPkcW4AlUR4xaDpa2OWazLr_KVjHxygWs</string>
+	<key>GCM_SENDER_ID</key>
+	<string>788141476838</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.recipeRecommendation</string>
+	<key>PROJECT_ID</key>
+	<string>flutterwavepayment-74b47</string>
+	<key>STORAGE_BUCKET</key>
+	<string>flutterwavepayment-74b47.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:788141476838:ios:fbac64bec1d2ff2a292427</string>
+</dict>
+</plist>

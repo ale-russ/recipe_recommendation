@@ -1,22 +1,43 @@
-import 'dart:convert';
+import 'dart:developer';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:recipe_recommendation/search_page.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 
-import 'model.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:recipe_recommendation/util_methods.dart';
 
-import 'recipes_page.dart';
+import 'firebase_options.dart';
 
-void main() {
-  runApp(const MyApp());
+bool shouldUseFirebaseEmulator = false;
+
+late final FirebaseApp app;
+late final FirebaseAuth auth;
+GoogleSignIn googleSignIn = GoogleSignIn();
+GoogleSignInAccount? user;
+late UserCredential userCredential;
+final facebookAuth = FacebookAuth.instance;
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  app = await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  auth = FirebaseAuth.instanceFor(app: app);
+
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    log('user: ${user?.email}');
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
@@ -25,103 +46,78 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       color: Colors.grey,
-      home: HomePage(),
+      home: App(),
     );
   }
 }
 
-class HomePage extends StatefulWidget {
-  HomePage({super.key});
+class App extends StatelessWidget {
+  App({super.key});
 
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  var url =
-      "https://api.edamam.com/search?q=chicken&app_id=be3353b4&app_key=2bf5acbfc6f59e90920704e6d64a2a8c&from=0&to=30&calories=591-722&health=alcohol-free";
-  List<Model> list = [];
-
-  String? searchText;
-
-  getApiData() async {
-    var response = await http.get(Uri.parse(url));
-    Map json = jsonDecode(response.body);
-    json['hits'].forEach((e) {
-      Model model = Model(
-          url: e['recipe']['url'],
-          image: e['recipe']['image'],
-          label: e['recipe']['label'],
-          source: e['recipe']['source']);
-      setState(() {
-        list.add(model);
-      });
-    });
-  }
-
-  @override
-  void initState() {
-    getApiData();
-    super.initState();
-  }
+  // final facebookLogin = FacebookAuth();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(0, 0, 0, 0.298),
-      appBar: AppBar(
-        backgroundColor: const Color.fromARGB(211, 35, 35, 37),
-        elevation: 0,
-        title: const Text(
-          'Food Recipe app',
-          style: TextStyle(color: Colors.white),
+      backgroundColor: Colors.black,
+      body: SizedBox(
+        height: MediaQuery.of(context).size.height,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            LoginIcons(
+              icon: const FaIcon(
+                FontAwesomeIcons.squareGooglePlus,
+                color: Colors.white,
+                size: 50,
+              ),
+              onPressed: () async {
+                googleLogin(context: context);
+              },
+            ),
+            LoginIcons(
+              onPressed: () {
+                facebookLogin(context: context);
+              },
+              icon: const FaIcon(
+                FontAwesomeIcons.facebook,
+                color: Colors.white,
+                size: 50,
+              ),
+            ),
+            LoginIcons(
+              onPressed: () {},
+              icon: const FaIcon(
+                FontAwesomeIcons.twitter,
+                color: Colors.blue,
+                size: 50,
+              ),
+            )
+          ],
         ),
       ),
-      body: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
-        child: SingleChildScrollView(
-          physics: const NeverScrollableScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              TextField(
-                style: const TextStyle(color: Colors.white),
-                onChanged: (value) {
-                  searchText = value;
-                },
-                decoration: InputDecoration(
-                  suffixIcon: IconButton(
-                    icon: const Icon(Icons.search),
-                    color: Colors.grey,
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (
-                            context,
-                          ) =>
-                              SearchPage(search: searchText),
-                        ),
-                      );
-                    },
-                  ),
-                  hintStyle: const TextStyle(color: Colors.grey),
-                  hintText: 'Search For Recipes',
-                  fillColor: Colors.green.withOpacity(0.04),
-                  filled: true,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 10),
-              RecipesPage(
-                list: list,
-                height: MediaQuery.of(context).size.height * 0.77,
-              )
-            ],
-          ),
-        ),
+    );
+  }
+}
+
+class LoginIcons extends StatelessWidget {
+  const LoginIcons({
+    super.key,
+    required this.onPressed,
+    required this.icon,
+  });
+
+  final Widget icon;
+  final void Function()? onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 6),
+      child: IconButton(
+        icon: icon,
+        onPressed: onPressed,
       ),
     );
   }
