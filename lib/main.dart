@@ -86,14 +86,14 @@ class App extends StatelessWidget {
                 size: 50,
               ),
             ),
-            LoginIcons(
-              onPressed: () {},
-              icon: const FaIcon(
-                FontAwesomeIcons.twitter,
-                color: Colors.blue,
-                size: 50,
-              ),
-            )
+            // LoginIcons(
+            //   onPressed: () {},
+            //   icon: const FaIcon(
+            //     FontAwesomeIcons.twitter,
+            //     color: Colors.blue,
+            //     size: 50,
+            //   ),
+            // )
           ],
         ),
       ),
